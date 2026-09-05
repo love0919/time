@@ -7,20 +7,20 @@
 <title>外送助手 Pro｜獨立訂單計時</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}body{position:fixed;inset:0}
 body{background:#06141c;color:#e6f0f2;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif}
-.app{height:100dvh;max-width:760px;margin:auto;padding:10px 12px 8px;background:
+.app{height:100svh;min-height:100svh;max-width:760px;margin:auto;padding:10px 12px 8px;background:
 radial-gradient(circle at 80% 10%,#16404455,transparent 28%),
 linear-gradient(145deg,#112a35,#06141c 62%);display:flex;flex-direction:column}
-.top{display:grid;grid-template-columns:minmax(105px,145px) 1fr 58px;gap:8px;align-items:center;flex:0 0 auto}
+.top{display:grid;grid-template-columns:110px minmax(0,1fr) 108px;gap:8px;align-items:center;flex:0 0 auto}
 .money{height:56px;border:1px solid #756033;border-radius:17px;background:#102731;color:#ffc54e;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800}
 .money input{width:70px;background:transparent;border:0;outline:0;color:#ffc54e;font-size:22px;font-weight:800;text-align:center}
 .start{height:56px;border:0;border-radius:17px;background:#18dda0;color:#04231c;font-size:18px;font-weight:900;box-shadow:0 0 16px #18dda044}
 .start:active,.complete:active,.history:active{transform:scale(.98)}
-.history{height:52px;width:58px;border:1px solid #4b5961;border-radius:17px;background:#142832;color:#ffc54e;font-size:27px}
+.history{height:52px;width:100%;min-width:0;border:1px solid #4b5961;border-radius:17px;background:#142832;color:#ffc54e;font-size:12px;font-weight:800;white-space:nowrap;padding:0 4px}
 .hint{height:27px;display:flex;align-items:center;justify-content:center;color:#91a7ae;font-size:12px;flex:0 0 auto}
 .status{height:25px;text-align:right;color:#9fb0b5;font-size:12px;flex:0 0 auto;padding-right:4px}
-.orders{min-height:0;flex:1;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:6px}
+.orders{min-height:0;flex:1;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:5px;overflow:hidden}
 .empty{height:100%;border:1px dashed #31525b;border-radius:17px;display:flex;align-items:center;justify-content:center;text-align:center;color:#879da4;font-size:14px;grid-row:1/5}
 .order{min-height:0;border:1px solid #2d505a;border-radius:16px;background:#0b2029;padding:7px 9px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .order.running{border-color:#21c98e;box-shadow:0 0 9px #18d99b22}
@@ -29,25 +29,146 @@ linear-gradient(145deg,#112a35,#06141c 62%);display:flex;flex-direction:column}
 .ue{font-size:16px;font-weight:900;color:#dce8ec}.num{font-size:17px;font-weight:900;color:#fff}
 .timer{font-size:22px;font-weight:900;color:#ffc34e;font-variant-numeric:tabular-nums;white-space:nowrap}
 .price{font-size:19px;font-weight:900;color:#ffc34e;white-space:nowrap}
-.line2{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:5px}
+.moneyRow{display:flex;align-items:center;justify-content:flex-start;gap:28px;min-height:28px;margin-top:2px}.moneyRow .delete{margin-left:6px}.line2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-top:4px}
 .note{height:31px;min-width:0;background:#061720;border:1px solid #1d3842;border-radius:9px;padding:5px 8px;color:#dbe6e9;font-size:13px;outline:0}
 .note::placeholder{color:#718991}
 .note:focus{border-color:#2a8f7a}
-.complete{height:31px;padding:0 13px;border:0;border-radius:9px;background:#18dda0;color:#04231c;font-size:13px;font-weight:900;white-space:nowrap}
+.complete{height:31px;padding:0 13px;border:0;border-radius:9px;background:#18dda0;color:#04231c;font-size:13px;font-weight:900;white-space:nowrap}.delete{height:31px;padding:0 9px;border:1px solid #35474d;border-radius:9px;background:transparent;color:#70858b;font-size:11px;font-weight:600;white-space:nowrap}
 .footer{display:flex;justify-content:space-between;padding:5px 3px 0;color:#91a5ac;font-size:12px;flex:0 0 auto}
 .footer b{color:#fff}
 .modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:flex-end;justify-content:center;padding:10px}
-.panel{width:min(720px,100%);height:min(78dvh,650px);background:#10252f;border:1px solid #38545e;border-radius:20px;padding:14px;display:flex;flex-direction:column}
+.panel{width:min(720px,100%);height:min(97dvh,1000px);background:#10252f;border:1px solid #38545e;border-radius:20px;padding:10px 12px 8px;display:flex;flex-direction:column}
 .panelHead{display:flex;justify-content:space-between;align-items:center}
 .panel h2{margin:0;font-size:20px}.closeX{background:none;border:0;color:#9fb1b7;font-size:25px}
-.historyList{overflow:auto;margin-top:8px;flex:1}
+.dateNav{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;margin-top:2px}
+.dateArrow{height:32px;border:1px solid #38545e;border-radius:10px;background:#0b1d25;color:#ffc54e;font-size:30px;line-height:20px}
+.periodDate{border:0;background:transparent;text-align:center;color:#f0f6f7;font-size:15px;font-weight:900;padding:4px 4px}
+.todayBtn{display:block;margin:1px auto 0;height:22px;padding:0 13px;border:1px solid #38545e;border-radius:999px;background:#0b1d25;color:#9fb0b5;font-size:11px;font-weight:700}.tabs{display:flex;gap:6px;margin-top:5px}.tab{flex:1;height:34px;border:1px solid #38545e;border-radius:10px;background:#0b1d25;color:#91a5ac;font-weight:800}.tab.active{background:#18b982;color:#05221b;border-color:#18b982}.historySummary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px}
+.statsCards{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:5px;margin-top:5px}
+.statCard{background:#0b1d25;border:1px solid #29434d;border-radius:9px;padding:6px 7px;min-width:0}
+.statCard span{display:block;color:#91a5ac;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.statCard b{display:block;color:#ffc54e;font-size:15px;margin-top:2px;white-space:nowrap}
+.historySummary>div{background:#0b1d25;border:1px solid #29434d;border-radius:9px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center}.historySummary span{font-size:12px;color:#91a5ac}.historySummary b{font-size:17px;color:#ffc54e}.historyList{overflow:auto;margin-top:8px;flex:1;min-height:0;padding-bottom:4px}
 .day{color:#ffc34e;font-weight:800;font-size:13px;padding:10px 2px 4px}
-.hist{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 3px;border-bottom:1px solid #29434d;font-size:13px}
+.hist{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:7px 3px;border-bottom:1px solid #29434d;font-size:13px}.hist span:first-child{min-width:0;overflow-wrap:anywhere}.hist small{overflow-wrap:anywhere;word-break:break-word}
 .hist small{color:#80979f}.hist b{color:#ffc34e;font-size:16px}
 .clear{margin-top:8px;height:40px;border:1px solid #63464b;background:#2b2024;color:#ffb0b0;border-radius:10px;font-weight:700}
-@media(max-height:650px){
- .app{padding-top:6px}.top{grid-template-columns:110px 1fr 52px}.money,.start{height:49px}.history{height:47px;width:52px}
- .hint{height:20px;font-size:11px}.status{height:20px}.order{padding:5px 8px}.timer{font-size:19px}.line2{margin-top:3px}.note,.complete{height:27px}
+@media(max-width:430px){.todayBar{padding:3px 2px;font-size:10px}.todayBar b{font-size:12px}.statsCards{gap:5px}.statCard{padding:7px 6px}.statCard b{font-size:14px}.top{grid-template-columns:98px minmax(0,1fr) 102px}.history{font-size:11px}.money{font-size:17px}.money input{width:54px;font-size:18px}.start{font-size:17px}}\n@media(max-height:650px){.panel{height:98dvh;padding:8px 10px 6px}.statsCards{margin-top:4px}.historySummary{margin-top:4px}.historyList{margin-top:5px}.hist{padding:6px 2px}.day{padding:5px 2px 2px}
+ .app{padding-top:6px}.top{grid-template-columns:110px 1fr 112px}.money,.start{height:49px}.history{height:47px;width:112px;font-size:13px}
+ .hint{height:20px;font-size:11px}.status{height:20px}.order{padding:5px 8px}.timer{font-size:19px}.moneyRow{margin-top:0}.line2{margin-top:3px}.note,.complete,.delete{height:27px}
+}
+
+/* 四筆訂單手機緊湊模式 */
+.orders{gap:5px}
+.order{padding:6px 9px;border-radius:14px;justify-content:space-evenly}
+.line1{gap:6px}
+.badge{padding:2px 7px;font-size:10px}
+.ue{font-size:15px}
+.num{font-size:16px}
+.timer{font-size:21px}
+.moneyRow{min-height:25px;margin-top:0;gap:18px}
+.price{font-size:20px}
+.delete{height:29px;padding:0 9px;font-size:10px}
+.line2{margin-top:2px;gap:7px}
+.note,.complete{height:30px}
+.note{font-size:12px;padding:4px 8px}
+.complete{font-size:12px;padding:0 11px}
+.footer{padding-top:3px}
+@media(max-width:430px){
+  .app{padding:7px 10px 5px}
+  .top{grid-template-columns:92px minmax(0,1fr) 102px;gap:6px}
+  .money,.start{height:50px}
+  .history{height:48px}
+  .hint{height:22px;font-size:11px}
+  .status{height:21px;font-size:11px}
+  .orders{gap:4px}
+  .order{padding:5px 8px}
+  .line1{gap:5px}
+  .badge{font-size:10px}
+  .ue,.num{font-size:15px}
+  .timer{font-size:20px}
+  .price{font-size:19px}
+  .moneyRow{gap:16px}
+  .note,.complete,.delete{height:29px}
+  .note{font-size:12px}
+  .complete{font-size:12px;padding:0 10px}
+  .footer{font-size:11px}
+}
+
+
+.todayBar{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:4px;margin-top:3px;padding:4px 5px;border:1px solid #29434d;border-radius:9px;background:#0b1d25;color:#91a5ac;font-size:11px}
+.todayBar span{text-align:center;white-space:nowrap}
+.todayBar b{color:#ffc54e;font-size:13px;margin-left:2px}
+ 
+.todayBar{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:4px;margin-top:3px;padding:4px 5px;border:1px solid #29434d;border-radius:9px;background:#0b1d25;color:#91a5ac;font-size:11px}
+.todayBar span{text-align:center;white-space:nowrap}
+.todayBar b{color:#ffc54e;font-size:13px;margin-left:2px}
+.confirmModal{display:none;position:fixed;inset:0;background:#020b0fcc;z-index:30;align-items:center;justify-content:center;padding:20px}
+.confirmBox{width:min(390px,100%);background:#0d252e;border:1px solid #2e5961;border-radius:20px;padding:21px 19px 16px;box-shadow:0 0 28px #000b;text-align:center}
+.confirmIcon{width:46px;height:46px;margin:0 auto 10px;border:1px solid #456069;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#8fa5ab;font-size:27px;font-weight:300}
+.confirmTitle{font-size:20px;font-weight:900;color:#edf4f5}
+.confirmText{margin-top:8px;color:#91a7ae;font-size:13px;line-height:1.6}
+.confirmActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.confirmActions button{height:44px;border-radius:11px;font-size:14px;font-weight:900}
+.confirmCancel{border:1px solid #38545e;background:#102a34;color:#b5c3c7}
+.confirmYes{border:1px solid #6a4549;background:#302124;color:#ffb2b2}
+
+.hintRow{
+  display:grid;
+  grid-template-columns:110px minmax(0,1fr) 108px;
+  gap:8px;
+  align-items:start;
+  flex:0 0 auto;
+  margin-top:2px;
+}
+.moneyHint{
+  grid-column:1;
+  width:110px;
+  text-align:center;
+  color:#91a7ae;
+  font-size:11px;
+  line-height:16px;
+  white-space:nowrap;
+}
+.guaranteeHint{
+  grid-column:2 / 4;
+  height:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#91a7ae;
+  font-size:12px;
+  line-height:16px;
+  white-space:nowrap;
+}
+@media(max-width:430px){
+  .hintRow{
+    grid-template-columns:110px minmax(0,1fr) 108px;
+  }
+  .moneyHint{font-size:10px}
+  .guaranteeHint{font-size:11px}
+}
+ 
+.moneyRow{display:flex;align-items:center;justify-content:flex-start;gap:10px;min-height:28px;margin-top:2px}
+.moneyRow .editFee{margin-left:10px}
+.editFee{height:31px;padding:0 9px;border:1px solid #35474d;border-radius:9px;background:transparent;color:#8b9da2;font-size:11px;font-weight:600;white-space:nowrap}
+.editFee:active{background:#142a32;border-color:#4b646c}
+.feeModal{display:none;position:fixed;inset:0;background:#000b;z-index:31;align-items:center;justify-content:center;padding:20px}
+.feeBox{width:min(360px,100%);background:#10252f;border:1px solid #2b5961;border-radius:20px;padding:21px 19px 17px;box-shadow:0 0 28px #000b;text-align:center}
+.feeTitle{font-size:20px;font-weight:900;color:#edf4f5}
+.feeSub{margin-top:4px;color:#22d9a0;font-size:13px;font-weight:800}
+.feeInputWrap{height:62px;margin:17px 0 8px;border:1px solid #765f2f;border-radius:13px;background:#091c24;display:flex;align-items:center;justify-content:center;gap:8px}
+.feeInputWrap span{color:#ffc34e;font-size:20px;font-weight:900}
+.feeInputWrap input{width:120px;border:0;outline:0;background:transparent;color:#ffc34e;font-size:30px;font-weight:900;text-align:center}
+.feeTip{color:#91a7ae;font-size:11px;line-height:1.5}
+.feeActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}
+.feeActions button{height:44px;border-radius:11px;font-size:14px;font-weight:900}
+.feeCancel{border:1px solid #38545e;background:#102a34;color:#b5c3c7}
+.feeSave{border:1px solid #19c991;background:#18dda0;color:#04231c}
+@media(max-width:430px){
+  .moneyRow{gap:6px}
+  .moneyRow .editFee{margin-left:5px}
+  .editFee,.delete{padding:0 7px;font-size:10px}
 }
 </style>
 </head>
@@ -58,11 +179,19 @@ linear-gradient(145deg,#112a35,#06141c 62%);display:flex;flex-direction:column}
       NT$ <input id="baseFee" type="number" min="45" step="1" value="45" aria-label="起始金額">
     </div>
     <button class="start" id="start">◷ 開始計時</button>
-    <button class="history" id="history" aria-label="歷史訂單" title="歷史訂單">↶</button>
+    <button class="history" id="history" aria-label="歷史訂單" title="歷史訂單">↶ 歷史訂單</button>
   </div>
-  <div class="hint">起始金額可修改　｜　依 245 元／時自動計算保障金額</div>
+  <div class="hintRow">
+    <div class="moneyHint">起始金額可修改</div>
+    <div class="guaranteeHint">依 245 元／時自動計算保障金額</div>
+  </div>
   <div class="status" id="status">目前 0/4 筆，還可增加 4 筆</div>
   <div class="orders" id="orders"></div>
+  <div class="todayBar">
+    <span>今日 <b id="todayIncome">NT$0</b></span>
+    <span>工作 <b id="todayWorkTime">0:00</b></span>
+    <span>時薪 <b id="todayHourly">NT$0/hr</b></span>
+  </div>
   <div class="footer">
     <span>今日完成 <b id="count">0</b> 筆</span>
     <span>今日收入 <b id="income">NT$0</b></span>
@@ -72,11 +201,54 @@ linear-gradient(145deg,#112a35,#06141c 62%);display:flex;flex-direction:column}
 <div class="modal" id="modal">
   <div class="panel">
     <div class="panelHead"><h2>↶ 歷史訂單</h2><button class="closeX" id="close">×</button></div>
+    <div class="dateNav">
+      <button class="dateArrow" id="prevDate" aria-label="前一天">‹</button>
+      <button class="periodDate" id="periodDate">2026/09/05</button>
+      <button class="dateArrow" id="nextDate" aria-label="後一天">›</button>
+    </div>
+    <button class="todayBtn" id="backToday">回到今天</button>
+    <div class="tabs"><button class="tab active" id="todayTab">本日</button><button class="tab" id="weekTab">本週</button></div>
+    <div class="statsCards">
+      <div class="statCard"><span id="statPeriodLabel">今天跑多少</span><b id="statIncome">NT$0</b></div>
+      <div class="statCard"><span>平均每小時</span><b id="statHourly">NT$0/hr</b></div>
+      <div class="statCard"><span id="statHoursLabel">今天工作時間</span><b id="statHours">0 小時</b></div>
+    </div>
+
+    <div class="historySummary">
+      <div><span id="periodLabel">本日收入</span><b id="periodIncome">NT$0</b></div>
+      <div><span>完成筆數</span><b id="periodCount">0 筆</b></div>
+    </div>
     <div class="historyList" id="historyList"></div>
     <button class="clear" id="clearHistory">清除歷史訂單</button>
   </div>
 </div>
 
+<div class="confirmModal" id="abandonModal">
+  <div class="confirmBox">
+    <div class="confirmIcon">×</div>
+    <div class="confirmTitle">放棄這筆訂單？</div>
+    <div class="confirmText">放棄後不會計入收入，也不會算完成單。</div>
+    <div class="confirmActions">
+      <button class="confirmCancel" id="abandonCancel">取消</button>
+      <button class="confirmYes" id="abandonYes">放棄此單</button>
+    </div>
+  </div>
+</div>
+<div class="feeModal" id="feeModal">
+  <div class="feeBox">
+    <div class="feeTitle">修改訂單金額</div>
+    <div class="feeSub" id="feeOrderLabel">UE #</div>
+    <div class="feeInputWrap">
+      <span>NT$</span>
+      <input id="feeInput" type="number" min="45" step="1" inputmode="decimal" aria-label="訂單金額">
+    </div>
+    <div class="feeTip">輸入平台實際顯示的報酬，計時不會重新開始。</div>
+    <div class="feeActions">
+      <button class="feeCancel" id="feeCancel">取消</button>
+      <button class="feeSave" id="feeSave">套用金額</button>
+    </div>
+  </div>
+</div>
 <script>
 const KEY="delivery_pro_orders_v3";
 const GUARANTEE=245;
@@ -108,10 +280,14 @@ function render(){
         <div class="line1">
           <span class="badge">進行中</span><span class="ue">UE</span>
           <span class="num">#${o.no}</span><span class="timer" id="t-${o.id}">00:00</span>
+        </div>
+        <div class="moneyRow">
           <span class="price" id="p-${o.id}">NT$${money(o).toFixed(0)}</span>
+          <button class="editFee" onclick="editFee('${o.id}')" aria-label="修改此單金額">修改金額</button>
+          <button class="delete" onclick="deleteOrder('${o.id}')" aria-label="放棄此單">放棄此單</button>
         </div>
         <div class="line2">
-          <input class="note" maxlength="50" placeholder="備註（店名等）" value="${esc(o.note||"")}" oninput="setNote('${o.id}',this.value)">
+          <input class="note" maxlength="50" inputmode="text" enterkeyhint="done" placeholder="備註（店名等）" value="${esc(o.note||"")}" oninput="setNote('${o.id}',this.value)">
           <button class="complete" onclick="complete('${o.id}')">配送完成</button>
         </div>`;
       el.appendChild(d);
@@ -136,22 +312,138 @@ function startOrder(){
   const o={id:Date.now()+"_"+Math.random().toString(36).slice(2),no,start:Date.now(),baseFee:base,note:""};
   data.push(o);save();render();
 }
+let abandonTarget=null;
+let feeTarget=null;
+function editFee(id){
+  const o=data.find(x=>String(x.id)===String(id));
+  if(!o)return;
+  feeTarget=id;
+  document.getElementById("feeOrderLabel").textContent="UE #"+o.no;
+  document.getElementById("feeInput").value=Number(o.baseFee||45);
+  document.getElementById("feeModal").style.display="flex";
+  setTimeout(()=>{const i=document.getElementById("feeInput");i.focus();i.select()},80);
+}
+function closeFeeModal(){
+  feeTarget=null;
+  document.getElementById("feeModal").style.display="none";
+}
+function saveEditedFee(){
+  if(feeTarget===null)return closeFeeModal();
+  const o=data.find(x=>String(x.id)===String(feeTarget));
+  if(!o)return closeFeeModal();
+  const v=Number(document.getElementById("feeInput").value);
+  if(!Number.isFinite(v)||v<45){
+    document.getElementById("feeInput").focus();
+    return;
+  }
+  o.baseFee=v;
+  save();
+  render();
+  closeFeeModal();
+}
+function deleteOrder(id){
+  const o=data.find(x=>String(x.id)===String(id));
+  if(!o)return;
+  abandonTarget=id;
+  document.getElementById("abandonModal").style.display="flex";
+}
 function complete(id){
   const o=data.find(x=>String(x.id)===String(id));if(!o)return;
   o.completedAt=Date.now();
   o.finalFee=Math.max(Number(o.baseFee||45),GUARANTEE*((o.completedAt-o.start)/3600000));
   save();render();
 }
+
+function todayCompleted(){
+  return data.filter(o=>o.completedAt&&!o.deleted&&isSameDay(o.completedAt));
+}
+function updateTodayBar(){
+  const done=todayCompleted();
+  const income=done.reduce((a,o)=>a+Number(o.finalFee||o.baseFee||45),0);
+  const completedHours=done.reduce((a,o)=>a+Math.max(0,(o.completedAt-o.start)/3600000),0);
+  const active=data.filter(o=>!o.deleted&&!o.completedAt&&isSameDay(o.start));
+  const activeHours=active.reduce((a,o)=>a+Math.max(0,(Date.now()-o.start)/3600000),0);
+  const hours=completedHours+activeHours;
+  const hourly=hours>0?income/hours:0;
+  document.getElementById("todayIncome").textContent="NT$"+income.toFixed(0);
+  const mins=Math.floor(hours*60);
+  document.getElementById("todayWorkTime").textContent=Math.floor(mins/60)+":"+pad2(mins%60);
+  document.getElementById("todayHourly").textContent="NT$"+hourly.toFixed(0)+"/hr";
+}
 function updateSummary(){
   const today=new Date().toDateString();
   const done=data.filter(o=>o.completedAt&&!o.deleted&&new Date(o.completedAt).toDateString()===today);
   document.getElementById("count").textContent=done.length;
-  document.getElementById("income").textContent="NT$"+done.reduce((a,o)=>a+Number(o.finalFee||o.baseFee||45),0).toFixed(0);
+  document.getElementById("income").textContent="NT$"+done.reduce((a,o)=>a+Number(o.finalFee||o.baseFee||45),0).toFixed(0);updateTodayBar();
 }
-function showHistory(){
+
+let historyMode="today";
+let selectedDate=new Date();
+selectedDate.setHours(0,0,0,0);
+
+function shiftSelectedDate(days){
+  selectedDate.setDate(selectedDate.getDate()+days);
+  showHistory(historyMode);
+}
+function startOfSelectedWeek(){
+  const d=new Date(selectedDate), day=(d.getDay()+6)%7;
+  d.setDate(d.getDate()-day); d.setHours(0,0,0,0);
+  return d;
+}
+function selectedWeekText(){
+  const monday=startOfSelectedWeek();
+  const sunday=new Date(monday); sunday.setDate(monday.getDate()+6);
+  return `${dateText(monday)} ～ ${dateText(sunday)}`;
+}
+
+function pad2(n){return String(n).padStart(2,"0")}
+function dateText(d){return `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())}`}
+function weekRangeText(){
+  const n=new Date(), day=(n.getDay()+6)%7;
+  const monday=new Date(n); monday.setHours(0,0,0,0); monday.setDate(n.getDate()-day);
+  const sunday=new Date(monday); sunday.setDate(monday.getDate()+6);
+  return `${dateText(monday)} ～ ${dateText(sunday)}`;
+}
+function isSameDay(ts){
+  return new Date(ts).toDateString()===selectedDate.toDateString();
+}
+function isThisWeek(ts){
+  const d=new Date(ts), monday=startOfSelectedWeek();
+  const next=new Date(monday); next.setDate(monday.getDate()+7);
+  return d>=monday && d<next;
+}
+
+function periodOrders(mode){
+  return data.filter(o=>o.completedAt&&!o.deleted)
+    .filter(o=>mode==="today"?isSameDay(o.completedAt):isThisWeek(o.completedAt))
+    .sort((a,b)=>a.completedAt-b.completedAt);
+}
+function updateHistoryStats(mode, done){
+  const income=done.reduce((a,o)=>a+Number(o.finalFee||o.baseFee||45),0);
+  const hours=done.reduce((a,o)=>a+Math.max(0,(o.completedAt-o.start)/3600000),0);
+  const hourly=hours>0?income/hours:0;
+  document.getElementById("statPeriodLabel").textContent=mode==="today"?"今天跑多少":"本週跑多少";
+  document.getElementById("statIncome").textContent="NT$"+income.toFixed(0);
+  document.getElementById("statHourly").textContent="NT$"+hourly.toFixed(0)+"/hr";
+  document.getElementById("statHoursLabel").textContent=mode==="today"?"今天工作時間":"本週工作時間";
+  document.getElementById("statHours").textContent=(hours<10?hours.toFixed(1):hours.toFixed(0))+" 小時";
+
+
+}
+function showHistory(mode="today"){
+  historyMode=mode;
+  document.getElementById("todayTab").classList.toggle("active",mode==="today");
+  document.getElementById("weekTab").classList.toggle("active",mode==="week");document.getElementById("periodDate").textContent=mode==="today"?dateText(selectedDate):"本週　"+selectedWeekText();
+  document.getElementById("backToday").style.visibility =
+    selectedDate.toDateString()===new Date().toDateString() ? "hidden" : "visible";
+  const done=periodOrders(mode).reverse();
+  updateHistoryStats(mode, done.slice().reverse());
+  const income=done.reduce((a,o)=>a+Number(o.finalFee||o.baseFee||45),0);
+  document.getElementById("periodLabel").textContent=mode==="today"?"本日收入":"本週收入";
+  document.getElementById("periodIncome").textContent="NT$"+income.toFixed(0);
+  document.getElementById("periodCount").textContent=done.length+" 筆";
   const list=document.getElementById("historyList");
-  const done=data.filter(o=>o.completedAt&&!o.deleted).sort((a,b)=>b.completedAt-a.completedAt);
-  if(!done.length){list.innerHTML='<div class="empty" style="height:180px">尚無歷史訂單</div>'}
+  if(!done.length){list.innerHTML='<div class="empty" style="height:180px">目前沒有符合條件的歷史訂單</div>'}
   else{
     let last="";
     list.innerHTML=done.map(o=>{
@@ -164,12 +456,34 @@ function showHistory(){
   }
   document.getElementById("modal").style.display="flex";
 }
+document.getElementById("abandonCancel").onclick=()=>{abandonTarget=null;document.getElementById("abandonModal").style.display="none"};
+document.getElementById("abandonYes").onclick=()=>{
+  if(abandonTarget!==null){
+    const o=data.find(x=>String(x.id)===String(abandonTarget));
+    if(o){o.deleted=true;o.abandonedAt=Date.now();save();render();}
+  }
+  abandonTarget=null;document.getElementById("abandonModal").style.display="none";
+};
+document.getElementById("abandonModal").onclick=e=>{if(e.target.id==="abandonModal"){abandonTarget=null;e.currentTarget.style.display="none"}};
+const feeCancelEl=document.getElementById("feeCancel");
+const feeSaveEl=document.getElementById("feeSave");
+const feeModalEl=document.getElementById("feeModal");
+const feeInputEl=document.getElementById("feeInput");
+if(feeCancelEl)feeCancelEl.onclick=closeFeeModal;
+if(feeSaveEl)feeSaveEl.onclick=saveEditedFee;
+if(feeModalEl)feeModalEl.onclick=e=>{if(e.target.id==="feeModal")closeFeeModal()};
+if(feeInputEl)feeInputEl.addEventListener("keydown",e=>{if(e.key==="Enter")saveEditedFee()});
 document.getElementById("start").onclick=startOrder;
-document.getElementById("history").onclick=showHistory;
+document.getElementById("history").onclick=()=>showHistory("today");
+document.getElementById("todayTab").onclick=()=>showHistory("today");
+document.getElementById("weekTab").onclick=()=>showHistory("week");
+document.getElementById("prevDate").onclick=()=>shiftSelectedDate(historyMode==="today"?-1:-7);
+document.getElementById("nextDate").onclick=()=>shiftSelectedDate(historyMode==="today"?1:7);
+document.getElementById("backToday").onclick=()=>{selectedDate=new Date();selectedDate.setHours(0,0,0,0);showHistory(historyMode)};
 document.getElementById("close").onclick=()=>document.getElementById("modal").style.display="none";
 document.getElementById("clearHistory").onclick=()=>{
   if(confirm("確定清除所有已完成的歷史訂單？")){
-    data=data.filter(o=>!o.completedAt);save();showHistory();render();
+    data=data.filter(o=>!o.completedAt);save();showHistory(historyMode);render();
   }
 };
 setInterval(()=>{
@@ -178,5 +492,6 @@ setInterval(()=>{
 },500);
 render();
 </script>
+
 </body>
 </html>
