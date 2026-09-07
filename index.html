@@ -151,16 +151,138 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .histDelete{width:40px}
 }
 
+
+<style id="interaction-fix">
+.start.isFull{background:#263f45!important;border-color:#3b5961!important;color:#8ea1a6!important}
+.start:disabled{opacity:1!important}
+.actionToast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%) translateY(10px);z-index:100;background:#182c32;color:#f2f6f7;border:1px solid #42616a;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:800;box-shadow:0 8px 24px #0008;opacity:0;pointer-events:none;transition:.18s;white-space:nowrap}
+.actionToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+<style id="reference-simple-final">
+.app{max-width:760px;padding:6px 9px 7px}
+.summaryBox{flex:0 0 74px;grid-template-columns:minmax(0,1fr) minmax(135px,.9fr);padding:7px 11px;margin-bottom:6px}
+.summaryLabel{font-size:12px}.summaryValue{font-size:29px;line-height:1}.summaryValue input{font-size:29px;width:55px}
+.insideHistory{height:30px;font-size:11px}
+.order{height:116px!important;min-height:116px!important;padding:7px 10px!important;display:grid!important;grid-template-rows:27px 48px 30px!important;gap:2px!important;overflow:hidden!important}
+.classicHead{display:flex;align-items:center;gap:8px}
+.classicHead .ue{font-size:17px;font-weight:900}
+.classicMetrics{display:grid!important;grid-template-columns:1fr 1.05fr 1fr!important;min-width:0}
+.classicMetrics .metric{display:flex;align-items:center;justify-content:center;min-width:0;padding:0 9px!important;border-right:1px solid #274b54!important}
+.classicMetrics .metric:last-child{border-right:0!important}
+.classicMetrics small{display:block;color:#91a5ab;font-size:10px;font-weight:700;white-space:nowrap;margin-bottom:2px}
+.classicMetrics .timer{font-size:25px!important;color:#f4f7f7!important;line-height:1!important;font-weight:900!important}
+.platformMetric{gap:7px}.platformMetric>div{text-align:center}
+.platformPrice{display:block;color:#ffc34a;font-size:23px;line-height:1;font-weight:900;white-space:nowrap}
+.inlineEdit{width:34px;height:34px;border:1px solid #2f6874;border-radius:9px;background:#071e25;color:#f0f6f7;font-size:19px;line-height:1}
+.actualMetric{flex-direction:column}
+.actualPrice{display:block;color:#72d69a;font-size:23px;line-height:1;font-weight:900;white-space:nowrap}
+.classicActions{display:grid!important;grid-template-columns:minmax(0,1fr) 142px 122px!important;gap:6px!important;align-items:center!important;min-width:0}
+.classicActions .note{position:static!important;transform:none!important;opacity:1!important;height:30px!important;width:100%!important;min-width:0!important;pointer-events:auto!important}
+.classicActions .delete,.classicActions .complete{position:static!important;width:100%!important;height:30px!important;padding:0 8px!important;border-radius:9px!important;font-size:11px!important;font-weight:900!important}
+.classicActions .complete{background:#3f6b48!important}
+.start{flex:0 0 70px!important;height:70px!important;margin:5px 0!important;border-radius:17px!important;font-size:27px!important}
+.start.isFull{background:#3f6b48!important;color:#f2f8f6!important;border-color:#547e5b!important}
+@media(max-width:520px){
+ .classicMetrics .metric{padding:0 5px!important}
+ .classicMetrics small{font-size:9px}
+ .classicMetrics .timer{font-size:23px!important}
+ .platformPrice,.actualPrice{font-size:21px}
+ .inlineEdit{width:32px;height:32px}
+ .classicActions{grid-template-columns:minmax(0,1fr) 112px 104px!important;gap:5px!important}
+}
+@media(max-width:390px){
+ .order{height:112px!important;min-height:112px!important;grid-template-rows:25px 44px 30px!important}
+ .classicMetrics{grid-template-columns:1fr 1.08fr 1fr!important}
+ .classicMetrics .metric{padding:0 3px!important}
+ .classicMetrics small{font-size:8px}
+ .classicMetrics .timer{font-size:21px!important}
+ .platformPrice,.actualPrice{font-size:19px}
+ .inlineEdit{width:29px;height:29px;font-size:17px}
+ .classicActions{grid-template-columns:minmax(0,1fr) 96px 91px!important;gap:4px!important}
+ .classicActions .delete,.classicActions .complete{font-size:10px!important}
+}
+
+<style id="premium-thin-final">
+/* ===== 精緻版：降低數字重量，保留三欄資訊 ===== */
+body{font-weight:400}
+.summaryValue{font-size:27px!important;font-weight:800!important}
+.summaryValue input{font-size:27px!important;font-weight:800!important}
+.summaryLabel{font-weight:500!important}
+.summaryInfo{font-weight:400!important}
+
+.order{
+  height:116px!important;
+  min-height:116px!important;
+  padding:7px 10px!important;
+  border-width:1px!important;
+  box-shadow:none!important;
+}
+.classicHead .ue{font-size:17px!important;font-weight:700!important}
+.badge{font-weight:700!important}
+
+.classicMetrics .metric{padding-left:9px!important;padding-right:9px!important}
+.classicMetrics small{font-size:9px!important;font-weight:500!important;color:#9aadb2!important}
+.classicMetrics .timer{
+  font-size:23px!important;
+  font-weight:600!important;
+  letter-spacing:.2px!important;
+  color:#edf3f4!important;
+}
+.platformPrice{
+  font-size:22px!important;
+  font-weight:700!important;
+  letter-spacing:.1px!important;
+}
+.actualPrice{
+  font-size:22px!important;
+  font-weight:700!important;
+  letter-spacing:.1px!important;
+}
+.inlineEdit{
+  width:32px!important;height:32px!important;
+  font-size:17px!important;
+  font-weight:400!important;
+}
+.classicActions .editFee,
+.classicActions .delete,
+.classicActions .complete{
+  font-weight:700!important;
+  font-size:11px!important;
+}
+.classicActions .note{font-weight:400!important}
+
+.start{
+  height:70px!important;
+  flex-basis:70px!important;
+  font-size:25px!important;
+  font-weight:700!important;
+  letter-spacing:0!important;
+}
+.todayBar b{font-size:14px!important;font-weight:700!important}
+.todayBar small{font-weight:500!important}
+
+@media(max-width:520px){
+  .classicMetrics .timer{font-size:22px!important}
+  .platformPrice,.actualPrice{font-size:20px!important}
+}
+@media(max-width:390px){
+  .classicMetrics .timer{font-size:20px!important}
+  .platformPrice,.actualPrice{font-size:18px!important}
+  .classicMetrics small{font-size:8px!important}
+}
+<style id="daily-number-style">.classicHead{gap:8px!important}.classicHead .ue{font-size:16px!important;font-weight:700!important;color:#edf3f4!important}</style></style>
+</style>
+</style>
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app"><div class="actionToast" id="actionToast"></div>
   <div class="summaryBox">
     <div><span class="summaryLabel">起始金額（可修改）</span><div class="summaryValue">NT$ <input id="baseFee" type="number" min="45" step="1" value="45"><button class="pencil" onclick="document.getElementById('baseFee').focus()">✎</button></div></div>
     <div class="summaryInfo"><button class="insideHistory" id="history">▣　歷史訂單</button><div>依 245 元／時自動計算保障金額</div><div id="status">目前 0/4 筆，還可增加 4 筆</div></div>
   </div>
   <div class="orders" id="orders"></div>
-  <button class="start" id="start">◷ 開始計時</button>
+  <button class="start" id="start" type="button">◷ 開始計時</button>
   <div class="todayBar">
     <span><small>今日收入</small><b id="todayIncome">NT$0</b></span><i></i>
     <span><small>待補金額</small><b id="todayPending">NT$0</b></span><i></i>
@@ -202,12 +324,57 @@ function periodOrders(mode){return data.filter(o=>o.completedAt&&!o.deleted).fil
 function unionDuration(arr,a,b){let x=arr.map(v=>[Math.max(v.start,a),Math.min(v.end,b)]).filter(v=>v[1]>v[0]).sort((x,y)=>x[0]-y[0]),t=0,s=null,e=null;for(const v of x){if(s===null){s=v[0];e=v[1]}else if(v[0]<=e)e=Math.max(e,v[1]);else{t+=e-s;s=v[0];e=v[1]}}return t+(s===null?0:e-s)}
 function workText(h){let sec=Math.round(h*3600),hh=Math.floor(sec/3600),mm=Math.floor(sec%3600/60),ss=sec%60;return hh?`${hh}:${pad(mm)}`:`${pad(mm)}:${pad(ss)}`}
 function render(){
-  const list=active(); $("status").textContent=`目前 ${list.length}/4 筆，還可增加 ${4-list.length} 筆`;
-  $("orders").innerHTML=list.length?list.map(o=>`<div class="order"><div class="line1"><span class="badge">進行中</span><span class="ue">UE</span><span class="num">#${o.no}</span><span class="timer" id="t-${o.id}">${fmt((Date.now()-o.start)/1000)}</span><span class="price" id="p-${o.id}">NT$${money(o).toFixed(0)}</span></div><div class="moneyRow"><button class="editFee" onclick="editFee('${o.id}')">修改金額</button><button class="delete" onclick="deleteOrder('${o.id}')">放棄此單</button></div><div class="line2"><input class="note" placeholder="備註（店名等）" value="${esc(o.note||"")}" oninput="setNote('${o.id}',this.value)"><button class="complete" onclick="complete('${o.id}')">配送完成</button></div></div>`).join(""):`<div class="empty">◷<br>按「開始計時」開始計算下一筆獨立訂單</div>`;
+  const list=active();
+  $("status").textContent=`目前 ${list.length}/4 筆，還可增加 ${4-list.length} 筆`;
+  $("orders").innerHTML=list.length?list.map(o=>{
+    const platform=Number(o.baseFee||45);
+    const actual=Math.max(platform,GUARANTEE*((Date.now()-o.start)/3600000));
+    return `<div class="order">
+      <div class="classicHead">
+        <span class="badge">進行中</span><span class="ue">UE #${o.no}</span>
+      </div>
+      <div class="classicMetrics">
+        <div class="metric">
+          <small>已用時間</small>
+          <strong class="timer" id="t-${o.id}">${fmt((Date.now()-o.start)/1000)}</strong>
+        </div>
+        <div class="metric platformMetric">
+          <div><small>平台金額</small><strong class="platformPrice">NT$${platform.toFixed(0)}</strong></div>
+          <button class="inlineEdit" type="button" onclick="editFee('${o.id}')" aria-label="修改平台金額">✎</button>
+        </div>
+        <div class="metric actualMetric">
+          <small>實際時間金額</small>
+          <strong class="actualPrice" id="a-${o.id}">NT$${actual.toFixed(0)}</strong>
+        </div>
+      </div>
+      <div class="classicActions">
+        <input class="note" aria-label="備註" placeholder="備註（店名等）" value="${esc(o.note||"")}" oninput="setNote('${o.id}',this.value)">
+        <button class="delete" type="button" onclick="deleteOrder('${o.id}')">放棄此單</button>
+        <button class="complete" type="button" onclick="complete('${o.id}')">配送完成</button>
+      </div>
+    </div>`;
+  }).join(""):`<div class="empty">◷<br>按「開始計時」開始計算下一筆獨立訂單</div>`;
   updateToday();
+  const startBtn=$("start");
+  if(startBtn){
+    const full=list.length>=4;
+    startBtn.classList.toggle("isFull",full);
+    startBtn.textContent=full?"已滿 4 筆":"◷ 開始計時";
+    startBtn.disabled=false;
+  }
 }
 function setNote(id,v){let o=data.find(x=>String(x.id)===String(id));if(o){o.note=v;save()}}
-function startOrder(){if(active().length>=4){alert("目前已滿 4 筆訂單，請先完成或放棄其中一筆。");return}let base=Math.max(45,Number($("baseFee").value)||45),no=Math.max(0,...data.map(x=>Number(x.no)||0))+1;data.push({id:Date.now()+"_"+Math.random(),no,start:Date.now(),baseFee:base,note:""});save();render()}
+function toast(msg){
+  const el=$("actionToast");
+  if(!el)return;
+  el.textContent=msg;
+  el.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>el.classList.remove("show"),1800);
+}
+function todayStartTs(){const d=new Date();d.setHours(0,0,0,0);return d.getTime();}
+function nextDailyOrderNo(){const start=todayStartTs();const nums=data.filter(o=>o&&!o.deleted&&Number(o.start)>=start).map(o=>Number(o.no)||0).filter(n=>n>0);return nums.length?Math.max(...nums)+1:1;}
+function startOrder(){if(active().length>=4){toast("目前已滿 4 筆，請先完成或放棄一筆");return}let base=Math.max(45,Number($("baseFee").value)||45),no=nextDailyOrderNo();data.push({id:Date.now()+"_"+Math.random(),no,start:Date.now(),baseFee:base,note:""});save();render()}
 function editFee(id){let o=data.find(x=>String(x.id)===String(id));if(!o)return;feeTarget=id;$("feeOrderLabel").textContent="UE #"+o.no;$("feeInput").value=o.baseFee||45;$("feeModal").style.display="flex";setTimeout(()=>{$("feeInput").focus();$("feeInput").select()},60)}
 function closeFee(){$("feeModal").style.display="none";feeTarget=null}
 function saveFee(){let o=data.find(x=>String(x.id)===String(feeTarget)),v=Number($("feeInput").value);if(!o||!Number.isFinite(v)||v<45)return;o.baseFee=v;save();closeFee();render()}
@@ -221,7 +388,16 @@ function showHistory(mode=historyMode){historyMode=mode;$("todayTab").classList.
 function deleteHistory(id){let o=data.find(x=>String(x.id)===String(id));if(!o)return;historyDeleteTarget=id;$("historyDeleteText").textContent=`確定要刪除 UE #${o.no} 這一筆歷史訂單嗎？`;$("historyDeleteModal").style.display="flex"}
 function shiftDate(n){selectedDate.setDate(selectedDate.getDate()+n);showHistory(historyMode)}
 $("start").onclick=startOrder;$("history").onclick=()=>showHistory("today");$("close").onclick=()=>$("modal").style.display="none";$("prevDate").onclick=()=>shiftDate(historyMode==="today"?-1:-7);$("nextDate").onclick=()=>shiftDate(historyMode==="today"?1:7);$("backToday").onclick=()=>{selectedDate=new Date();selectedDate.setHours(0,0,0,0);showHistory(historyMode)};$("todayTab").onclick=()=>showHistory("today");$("weekTab").onclick=()=>showHistory("week");$("abandonCancel").onclick=()=>{$("abandonModal").style.display="none";abandonTarget=null};$("abandonYes").onclick=()=>{let o=data.find(x=>String(x.id)===String(abandonTarget));if(o)o.deleted=true;save();$("abandonModal").style.display="none";abandonTarget=null;render()};$("historyDeleteCancel").onclick=()=>{$("historyDeleteModal").style.display="none";historyDeleteTarget=null};$("historyDeleteYes").onclick=()=>{let o=data.find(x=>String(x.id)===String(historyDeleteTarget));if(o)o.deleted=true;save();$("historyDeleteModal").style.display="none";historyDeleteTarget=null;showHistory(historyMode);render()};$("feeCancel").onclick=closeFee;$("feeSave").onclick=saveFee;
-setInterval(()=>{active().forEach(o=>{let t=$("t-"+o.id),p=$("p-"+o.id);if(t)t.textContent=fmt((Date.now()-o.start)/1000);if(p)p.textContent="NT$"+money(o).toFixed(0)});updateToday()},500);
+setInterval(()=>{
+  active().forEach(o=>{
+    const elapsed=(Date.now()-o.start)/1000;
+    const t=$("t-"+o.id);
+    const a=$("a-"+o.id);
+    if(t)t.textContent=fmt(elapsed);
+    if(a)a.textContent="NT$"+Math.max(Number(o.baseFee||45),GUARANTEE*(elapsed/3600)).toFixed(0);
+  });
+  updateToday();
+},500);
 render();
 </script>
 </body>
