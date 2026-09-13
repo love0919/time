@@ -275,7 +275,45 @@ body{font-weight:400}
 </style>
 </style>
 </style>
-<style id="history-scroll-final-fix">html,body{width:100%;height:100%;margin:0;padding:0}body{overflow:hidden!important}.modal{position:fixed!important;inset:0!important;z-index:9999!important;align-items:stretch!important;justify-content:center!important;box-sizing:border-box!important;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))!important}.modal .panel{width:100%!important;max-width:760px!important;height:100%!important;max-height:none!important;min-height:0!important;margin:0 auto!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}.modal .panelHead,.modal .dateNav,.modal .todayBtn,.modal .tabs,.modal .statsCards,.modal .workTimeNote,.modal .historySummary{flex:0 0 auto!important}.modal .historyList{flex:1 1 auto!important;width:100%!important;min-height:0!important;height:auto!important;max-height:none!important;box-sizing:border-box!important;overflow-y:scroll!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;overscroll-behavior:contain!important;padding-bottom:20px!important}.modal .historyList .hist{flex:0 0 auto}.modal .historyList::-webkit-scrollbar{width:5px}.modal .historyList::-webkit-scrollbar-thumb{background:#44656d;border-radius:99px}</style></head>
+
+<style id="history-scroll-only-fix">
+/* 只修正歷史訂單滑動，不改變原本排版 */
+#modal {
+  position: fixed !important;
+  inset: 0 !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+#modal .panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+#modal .panelHead,
+#modal .dateNav,
+#modal .todayBtn,
+#modal .tabs,
+#modal .statsCards,
+#modal .workTimeNote {
+  flex: 0 0 auto !important;
+}
+#modal #historyList {
+  display: block !important;
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  overscroll-behavior: contain !important;
+}
+</style>
+</head>
 <body>
 <div class="app"><div class="actionToast" id="actionToast"></div>
   <div class="summaryBox">
